@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-class SidebarViewController: UIViewController {
 
+class SidebarViewController: UIViewController {
     
     var sideMenu = ["Sydney","Perth", "Melbourne"]
-  
     
-  //  defaults.object(forKey: "SavedArray") as? [String] ?? [String]()
-
+    
+    //  defaults.object(forKey: "SavedArray") as? [String] ?? [String]()
+    
     
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -37,15 +37,16 @@ extension SidebarViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = sideMenu[indexPath.row]
-        print("City selected : \(city)")
+        let selectedCity = sideMenu[indexPath.row]
+        print("City selected : \(selectedCity)")
         
-        
-        // close slide menu
-        NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
-        
+        UIApplication.shared.sendAction(
+            #selector(ResponderAction.sendCityName),
+            to: nil,
+            from: self,
+            for: nil)
         
     }
 }
@@ -63,4 +64,9 @@ extension SidebarViewController: UITableViewDataSource {
         cell.titleLabel.text = sideMenu[indexPath.row]
         return cell
     }
+}
+
+
+@objc protocol ResponderAction: AnyObject {
+    func sendCityName(sender: Any?)
 }

@@ -11,7 +11,6 @@ import CoreLocation
 
 class MainViewController: UIViewController {
     
-    
     @IBOutlet weak var locationImage: UIImageView!
     @IBOutlet weak var mainBackground: UIImageView!
     @IBOutlet weak var sideMenuButton: UIButton!
@@ -27,7 +26,8 @@ class MainViewController: UIViewController {
     let locationManager = CLLocationManager()
     var searchedData = [String]()
     let defaults = UserDefaults.standard
-
+    
+    let sideBarVC = SidebarViewController()
     
     override func viewDidLoad() {
         
@@ -47,7 +47,6 @@ class MainViewController: UIViewController {
         weatherManager.delegate = self
         searchField.delegate = self
         dailyWeatherManager.delegate = self
-        
     }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
@@ -218,5 +217,13 @@ extension MainViewController: DailyWeatherManagerDelegate{
     func failWithError(error: Error) {
         print("Got error response")
         self.removeSpinner()
+    }
+}
+
+extension AppDelegate: ResponderAction {
+    @objc func sendCityName(sender: Any?){
+        print("Inside main vc ===")
+        // close slide menu
+        //NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
 }
