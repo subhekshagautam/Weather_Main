@@ -75,7 +75,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="xR2-gH-fFf">
-                                <rect key="frame" x="16" y="98" width="208" height="747"/>
+                                <rect key="frame" x="16" y="98" width="224" height="747"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAX-SK-HEt"/>
@@ -86,7 +88,7 @@
                             <constraint firstAttribute="trailing" secondItem="orv-H5-Xic" secondAttribute="trailing" constant="17" id="Jfe-Ij-JcG"/>
                             <constraint firstItem="orv-H5-Xic" firstAttribute="top" secondItem="aAX-SK-HEt" secondAttribute="top" id="XAx-ME-lia"/>
                             <constraint firstItem="xR2-gH-fFf" firstAttribute="top" secondItem="orv-H5-Xic" secondAttribute="bottom" constant="18" id="ZYB-YJ-XQi"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="xR2-gH-fFf" secondAttribute="trailing" id="cfK-OI-7MT"/>
+                            <constraint firstItem="aAX-SK-HEt" firstAttribute="trailing" secondItem="xR2-gH-fFf" secondAttribute="trailing" id="cfK-OI-7MT"/>
                             <constraint firstItem="orv-H5-Xic" firstAttribute="leading" secondItem="jvi-xF-tdL" secondAttribute="leading" constant="16" id="sl1-QR-vTn"/>
                         </constraints>
                     </view>

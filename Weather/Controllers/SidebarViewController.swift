@@ -9,11 +9,13 @@ import Foundation
 import UIKit
 
 class SidebarViewController: UIViewController {
-    
-   var mWeather = WeatherManager()
-    var mainVC = MainViewController()
+
     
     var sideMenu = ["Sydney","Perth", "Melbourne"]
+  
+    
+  //  defaults.object(forKey: "SavedArray") as? [String] ?? [String]()
+
     
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!

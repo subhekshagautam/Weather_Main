@@ -25,6 +25,9 @@ class MainViewController: UIViewController {
     var dailyWeatherManager = DailyWeatherManager()
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
+    var searchedData = [String]()
+    let defaults = UserDefaults.standard
+
     
     override func viewDidLoad() {
         
@@ -36,7 +39,7 @@ class MainViewController: UIViewController {
         
         searchField.setLeftImage(imageName: "magnifyingglass")
         
-                let nib = UINib(nibName: "MainViewTableCell", bundle: nil)
+        let nib = UINib(nibName: "MainViewTableCell", bundle: nil)
         predictionTable.register(nib, forCellReuseIdentifier: "MainViewTableCell")
         self.predictionTable.dataSource = self
         
@@ -95,6 +98,14 @@ extension MainViewController: UITextFieldDelegate {
             // API calling using city name input by user
             self.showSpinner(onView: self.view)
             weatherManager.fetchweather(cityName: city)
+            
+            // Add city name on user default
+            searchedData.append (city)
+            defaults.set(self.searchedData,forKey: "UserSearched")
+            for items in searchedData{
+                print("default ======== \(items)")
+                
+            }
         }
         
         searchField.text = ""

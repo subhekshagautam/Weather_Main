@@ -13,7 +13,12 @@ class TableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+
+        selectedBackgroundView = {
+                        let view = UIView()
+            view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+                        return view
+        }()
     }
 
 

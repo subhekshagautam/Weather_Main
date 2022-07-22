@@ -51,7 +51,6 @@ struct DailyWeatherManager {
                 if let dailyData = self.parseJSON(safeData) {
                     self.delegate?.didGetAllResponse(dailyData: dailyData)
                 }
-                
             }
         }.resume()
     }
