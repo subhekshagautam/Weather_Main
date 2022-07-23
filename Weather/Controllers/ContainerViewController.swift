@@ -9,14 +9,33 @@ import Foundation
 import UIKit
 class ContainterViewController:UIViewController {
     
+    
+    @IBOutlet weak var sideContainerView: UIView!
+    @IBOutlet weak var mainCointainerView: UIView!
     @IBOutlet weak var SideMenuConstraints: NSLayoutConstraint!
+    
     var sideMenuOpen = false
+    var mainVC : MainViewController!
+    var sideVC : SidebarViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(toggleSideMenu),
                                                name: NSNotification.Name("ToggleSideMenu"),
                                                object: nil)
+        
+        self.mainVC = self.storyboard?.instantiateViewController(withIdentifier: "MainViewController") as? MainViewController
+        self.addContainerView(content: self.mainVC, backgroundView: self.mainCointainerView)
+        
+        self.sideVC = self.storyboard?.instantiateViewController(withIdentifier: "SidebarViewController") as? SidebarViewController
+        self.sideVC.didSelectInMenuCallBack = { [weak self]  selectedCity in
+            guard let `self` = self else { return }
+            
+          self.mainVC.didSelectInMenuCallBack?(selectedCity)
+        }
+        self.addContainerView(content: self.sideVC, backgroundView: self.sideContainerView)
+        
         
     }
     @objc func toggleSideMenu() {
@@ -32,6 +51,15 @@ class ContainterViewController:UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
+// MARK:-add viewcontroller to container
+    fileprivate func addContainerView(content:UIViewController, backgroundView : UIView){
+        
+        self.addChild(content)
+        backgroundView.addSubview(content.view)
+        
+        content.view.frame.origin = backgroundView.bounds.origin
+        content.view.frame.size = backgroundView.bounds.size
+        content.didMove(toParent: self)
+    }
     
 }

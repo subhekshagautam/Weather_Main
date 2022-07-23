@@ -22,15 +22,9 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="OEZ-01-5ih"/>
                                 </constraints>
-                                <connections>
-                                    <segue destination="5oe-hq-evj" kind="embed" identifier="" id="mEt-le-kZG"/>
-                                </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tdz-pt-hdI" userLabel="BackContainer View">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <connections>
-                                    <segue destination="8ku-ql-q0r" kind="embed" id="4bS-yi-qAq"/>
-                                </connections>
                             </containerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="s34-IU-jiO"/>
@@ -50,8 +44,10 @@
                         <outlet property="SideMenuConstraints" destination="hOc-j1-ltk" id="1pX-L8-rfX"/>
                         <outlet property="cityLabel" destination="MBT-fk-5Mq" id="wdp-Av-D50"/>
                         <outlet property="conditionImage" destination="GFc-su-gTf" id="WF7-YR-A46"/>
+                        <outlet property="mainCointainerView" destination="tdz-pt-hdI" id="Wtw-bd-5bP"/>
                         <outlet property="predictionTable" destination="Jmk-6K-5f1" id="D6T-Id-el0"/>
                         <outlet property="searchField" destination="Ac7-kA-LnG" id="q96-WR-DVz"/>
+                        <outlet property="sideContainerView" destination="jHM-ka-4Yd" id="4ba-eF-ppf"/>
                         <outlet property="sideMenuButton" destination="7Mg-Fj-VGh" id="242-XB-5a4"/>
                         <outlet property="temperatureLabel" destination="Rjg-HI-0QF" id="VZl-db-HLb"/>
                     </connections>
@@ -63,19 +59,19 @@
         <!--Sidebar View Controller-->
         <scene sceneID="gLP-43-tjG">
             <objects>
-                <viewController id="5oe-hq-evj" customClass="SidebarViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SidebarViewController" id="5oe-hq-evj" customClass="SidebarViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jvi-xF-tdL">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="orv-H5-Xic">
-                                <rect key="frame" x="16" y="44" width="207" height="36"/>
+                                <rect key="frame" x="16" y="44" width="381" height="36"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="xR2-gH-fFf">
-                                <rect key="frame" x="16" y="98" width="224" height="747"/>
+                                <rect key="frame" x="20" y="98" width="394" height="747"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
@@ -104,7 +100,7 @@
         <!--Main View Controller-->
         <scene sceneID="tvg-ij-j6e">
             <objects>
-                <viewController id="8ku-ql-q0r" customClass="MainViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" id="8ku-ql-q0r" customClass="MainViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9Nf-HZ-uMP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -24,8 +24,12 @@ class MainViewController: UIViewController {
     var dailyWeatherManager = DailyWeatherManager()
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
-    var searchedData = [String]()
-    let defaults = UserDefaults.standard
+   
+    public var didSelectInMenuCallBack : ((String) -> ())?
+    
+    // user defaults declaratoon
+    // var searchedData = [String]()
+  //  let defaults = UserDefaults.standard
     
     let sideBarVC = SidebarViewController()
     
@@ -47,6 +51,21 @@ class MainViewController: UIViewController {
         weatherManager.delegate = self
         searchField.delegate = self
         dailyWeatherManager.delegate = self
+        
+        
+        self.didSelectInMenuCallBack = { [weak self] selectedCity
+            in
+            guard self != nil else { return }
+
+            print(selectedCity)
+            
+            NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
+            
+            // Hit api here
+            // API calling using city name input by user
+            self!.showSpinner(onView: self!.view)
+            self!.weatherManager.fetchweather(cityName: selectedCity)
+        }
     }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
@@ -99,15 +118,15 @@ extension MainViewController: UITextFieldDelegate {
             weatherManager.fetchweather(cityName: city)
             
             // Add city name on user default
-            searchedData.append (city)
-            defaults.set(self.searchedData,forKey: "UserSearched")
-            for items in searchedData{
-                print("default ======== \(items)")
-                
-            }
+//            searchedData.append (city)
+//            defaults.set(self.searchedData,forKey: "UserSearched")
+//            for items in searchedData{
+//                print("default ======== \(items)")
+//
+//            }
         }
         
-        searchField.text = ""
+       searchField.text = ""
     }
     
 }
@@ -220,10 +239,3 @@ extension MainViewController: DailyWeatherManagerDelegate{
     }
 }
 
-extension AppDelegate: ResponderAction {
-    @objc func sendCityName(sender: Any?){
-        print("Inside main vc ===")
-        // close slide menu
-        //NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
-    }
-}

@@ -11,14 +11,11 @@ import UIKit
 
 class SidebarViewController: UIViewController {
     
-    var sideMenu = ["Sydney","Perth", "Melbourne"]
-    
-    
-    //  defaults.object(forKey: "SavedArray") as? [String] ?? [String]()
-    
-    
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    
+    public var didSelectInMenuCallBack : ((String) -> ())?
+    var sideMenu = ["Sydney","Perth", "Melbourne"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +38,7 @@ extension SidebarViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCity = sideMenu[indexPath.row]
         print("City selected : \(selectedCity)")
-        
-        UIApplication.shared.sendAction(
-            #selector(ResponderAction.sendCityName),
-            to: nil,
-            from: self,
-            for: nil)
+        self.didSelectInMenuCallBack?(selectedCity)
         
     }
 }
@@ -67,6 +59,4 @@ extension SidebarViewController: UITableViewDataSource {
 }
 
 
-@objc protocol ResponderAction: AnyObject {
-    func sendCityName(sender: Any?)
-}
+
