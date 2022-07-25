@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreLocation
-
+import DropDown
 
 class MainViewController: UIViewController {
     
@@ -20,22 +20,32 @@ class MainViewController: UIViewController {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var predictionTable: UITableView!
     
+    
     private var allData = [Daily]()
     var dailyWeatherManager = DailyWeatherManager()
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
-   
+    
+    let defaults = UserDefaults.standard
+    
+    let dropDown = DropDown()
+    var searching = false
+    var dropDownArray = ["sydney", "Melbourne", "Perth", "Greater Sydney", "North Sydney"]
+    var filterData = [String]()
+    
     public var didSelectInMenuCallBack : ((String) -> ())?
     
     // user defaults declaratoon
     // var searchedData = [String]()
-  //  let defaults = UserDefaults.standard
+   
     
     let sideBarVC = SidebarViewController()
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        filterData = dropDownArray
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -51,12 +61,37 @@ class MainViewController: UIViewController {
         weatherManager.delegate = self
         searchField.delegate = self
         dailyWeatherManager.delegate = self
-        
+                
+        // user defaults
+
+        if let value = defaults.value(forKey: "dropdown") as? String
+        {
+            print("Addvaluee========= \(value)")
+            dropDownArray.append(value)
+            print(dropDownArray.count)
+        }
+        // dropdown part
+        dropDown.anchorView = searchField
+        dropDown.dataSource = filterData
+        dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
+        dropDown.topOffset = CGPoint(x: 0, y:-(dropDown.anchorView?.plainView.bounds.height)!)
+        dropDown.direction = .bottom
+        DropDown.appearance().backgroundColor = UIColor(red: 0.00, green: 0.42, blue: 0.46, alpha: 0.50)
+        DropDown.appearance().selectionBackgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
+        dropDown.reloadAllComponents()
+        //dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+          //  self.searchField.text = filterData[index]
+            
+         //   searchField.addTarget(self, action: #selector(searchData), for: .editingChanged)
+            
+           
+        //}
+      
         
         self.didSelectInMenuCallBack = { [weak self] selectedCity
             in
             guard self != nil else { return }
-
+            
             print(selectedCity)
             
             NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
@@ -67,6 +102,29 @@ class MainViewController: UIViewController {
             self!.weatherManager.fetchweather(cityName: selectedCity)
         }
     }
+    
+//    @objc func searchData(sender: UITextField) {
+//        print ("TextField is changing === \(searchField.text ?? "")")
+//        self.filterData.removeAll()
+//        let searchedData: Int = searchField.text!.count
+//        if searchedData != 0 {
+//            searching = true
+//            for items in dropDownArray{
+//                if let dataToSearch = searchField.text {
+//                    let range = items.lowercased().range(of: dataToSearch, options: .caseInsensitive, range: nil, locale: nil)
+//                    if  range != nil   {
+//                        self.filterData.append(contentsOf: dropDownArray)
+//                    }
+//                }
+//            }
+//        }
+//        else  {
+//            self.filterData = self.dropDownArray
+//            self.searching = false
+//        }
+//
+//        dropDown.reloadAllComponents()
+//    }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
@@ -90,10 +148,19 @@ extension  UITextField{
 
 extension MainViewController: UITextFieldDelegate {
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        dropDown.show()
+    }
     // return when user press return keyword in the keyword
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        //delegate part
+        
+        defaults.set(searchField.text, forKey: "dropdown")
+        
         searchField.endEditing(true)
+        dropDown.hide()
         return true
+        
     }
     // useful for validation on what user types
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
@@ -105,6 +172,7 @@ extension MainViewController: UITextFieldDelegate {
             return false
         }
     }
+    
     //delete text fiels contents after user types search or return keyword
     func textFieldDidEndEditing(_ textField: UITextField) {
         //textfiled.text data passed by user need to be hold
@@ -118,16 +186,24 @@ extension MainViewController: UITextFieldDelegate {
             weatherManager.fetchweather(cityName: city)
             
             // Add city name on user default
-//            searchedData.append (city)
-//            defaults.set(self.searchedData,forKey: "UserSearched")
-//            for items in searchedData{
-//                print("default ======== \(items)")
-//
-//            }
+            //            searchedData.append (city)
+            //            defaults.set(self.searchedData,forKey: "UserSearched")
+            //            for items in searchedData{
+            //                print("default ======== \(items)")
+            //
+            //            }
         }
-        
-       searchField.text = ""
+       
+        searchField.text = ""
     }
+    // filter data in search field
+//
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//
+//        return true
+//    }
+//
+    
     
 }
 

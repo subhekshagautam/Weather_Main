@@ -77,7 +77,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAX-SK-HEt"/>
-                        <color key="backgroundColor" red="0.25197285409999998" green="0.3366518617" blue="0.36863276360000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.28627450980392155" green="0.42745098039215684" blue="0.41568627450980389" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="xR2-gH-fFf" secondAttribute="bottom" constant="17" id="GZ8-Wv-yam"/>
                             <constraint firstItem="xR2-gH-fFf" firstAttribute="leading" secondItem="jvi-xF-tdL" secondAttribute="leadingMargin" id="HHi-Lc-haH"/>
