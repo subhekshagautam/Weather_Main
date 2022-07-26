@@ -30,14 +30,15 @@ class MainViewController: UIViewController {
     
     let dropDown = DropDown()
     var searching = false
-    var dropDownArray = ["sydney", "Melbourne", "Perth", "Greater Sydney", "North Sydney"]
-    var filterData = [String]()
+    var dropDownArray = ["Sydney", "Melbourne", "Perth"]
+    
+    let userDefaultKey = "dropdown"
     
     public var didSelectInMenuCallBack : ((String) -> ())?
     
     // user defaults declaratoon
     // var searchedData = [String]()
-   
+    
     
     let sideBarVC = SidebarViewController()
     
@@ -45,7 +46,7 @@ class MainViewController: UIViewController {
         
         super.viewDidLoad()
         
-        filterData = dropDownArray
+        dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -61,18 +62,10 @@ class MainViewController: UIViewController {
         weatherManager.delegate = self
         searchField.delegate = self
         dailyWeatherManager.delegate = self
-                
-        // user defaults
-
-        if let value = defaults.value(forKey: "dropdown") as? String
-        {
-            print("Addvaluee========= \(value)")
-            dropDownArray.append(value)
-            print(dropDownArray.count)
-        }
+        
         // dropdown part
         dropDown.anchorView = searchField
-        dropDown.dataSource = filterData
+        dropDown.dataSource = dropDownArray
         dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
         dropDown.topOffset = CGPoint(x: 0, y:-(dropDown.anchorView?.plainView.bounds.height)!)
         dropDown.direction = .bottom
@@ -80,13 +73,13 @@ class MainViewController: UIViewController {
         DropDown.appearance().selectionBackgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
         dropDown.reloadAllComponents()
         //dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-          //  self.searchField.text = filterData[index]
-            
-         //   searchField.addTarget(self, action: #selector(searchData), for: .editingChanged)
-            
-           
+        //  self.searchField.text = filterData[index]
+        
+        //   searchField.addTarget(self, action: #selector(searchData), for: .editingChanged)
+        
+        
         //}
-      
+        print(dropDownArray.count)
         
         self.didSelectInMenuCallBack = { [weak self] selectedCity
             in
@@ -103,28 +96,28 @@ class MainViewController: UIViewController {
         }
     }
     
-//    @objc func searchData(sender: UITextField) {
-//        print ("TextField is changing === \(searchField.text ?? "")")
-//        self.filterData.removeAll()
-//        let searchedData: Int = searchField.text!.count
-//        if searchedData != 0 {
-//            searching = true
-//            for items in dropDownArray{
-//                if let dataToSearch = searchField.text {
-//                    let range = items.lowercased().range(of: dataToSearch, options: .caseInsensitive, range: nil, locale: nil)
-//                    if  range != nil   {
-//                        self.filterData.append(contentsOf: dropDownArray)
-//                    }
-//                }
-//            }
-//        }
-//        else  {
-//            self.filterData = self.dropDownArray
-//            self.searching = false
-//        }
-//
-//        dropDown.reloadAllComponents()
-//    }
+    //    @objc func searchData(sender: UITextField) {
+    //        print ("TextField is changing === \(searchField.text ?? "")")
+    //        self.filterData.removeAll()
+    //        let searchedData: Int = searchField.text!.count
+    //        if searchedData != 0 {
+    //            searching = true
+    //            for items in dropDownArray{
+    //                if let dataToSearch = searchField.text {
+    //                    let range = items.lowercased().range(of: dataToSearch, options: .caseInsensitive, range: nil, locale: nil)
+    //                    if  range != nil   {
+    //                        self.filterData.append(contentsOf: dropDownArray)
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        else  {
+    //            self.filterData = self.dropDownArray
+    //            self.searching = false
+    //        }
+    //
+    //        dropDown.reloadAllComponents()
+    //    }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
@@ -149,14 +142,13 @@ extension  UITextField{
 extension MainViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        // if dropdown is showing update else show
+        dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
+        dropDown.dataSource = dropDownArray
         dropDown.show()
     }
     // return when user press return keyword in the keyword
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //delegate part
-        
-        defaults.set(searchField.text, forKey: "dropdown")
-        
         searchField.endEditing(true)
         dropDown.hide()
         return true
@@ -185,24 +177,29 @@ extension MainViewController: UITextFieldDelegate {
             self.showSpinner(onView: self.view)
             weatherManager.fetchweather(cityName: city)
             
-            // Add city name on user default
-            //            searchedData.append (city)
-            //            defaults.set(self.searchedData,forKey: "UserSearched")
-            //            for items in searchedData{
-            //                print("default ======== \(items)")
-            //
-            //            }
+            // if dropDownArray count >=10 remove 0 position city and append new city
+            if !dropDownArray.contains(city){
+                if dropDownArray.count >= 10{
+                    dropDownArray.remove(at: 0)
+                }
+                dropDownArray.append (city.capitalized)
+            }
+            
+            defaults.set(self.dropDownArray,forKey: userDefaultKey)
+            for items in dropDownArray{
+                print("default ======== \(items)")
+            }
         }
-       
+        
         searchField.text = ""
     }
     // filter data in search field
-//
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//
-//        return true
-//    }
-//
+    //
+    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    //
+    //        return true
+    //    }
+    //
     
     
 }
