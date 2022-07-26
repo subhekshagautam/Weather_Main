@@ -9,7 +9,7 @@ import Foundation
 
 protocol DailyWeatherManagerDelegate {
     func didGetAllResponse(dailyData: DailyWeatherData)
-    func failWithError(error: Error)
+    func didFailWithError(error: Error?, message: String?)
 }
 
 struct DailyWeatherManager {
@@ -34,16 +34,30 @@ struct DailyWeatherManager {
             URLQueryItem(name: "exclude", value: "alerts,hourly,minutely,current"),
             URLQueryItem(name: "units", value: "metric"),
         ]
-  
-        guard let url = urlBuilder?.url else { return }
+        
+        guard let url = urlBuilder?.url else {
+            delegate?.didFailWithError(error: nil, message: "Invalid URL")
+            print("URL: Invalide")
+            return
+        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 10.0
+        sessionConfig.timeoutIntervalForResource = 20.0
+        
+        let session = URLSession(configuration: sessionConfig)
+        
+        session.dataTask(with: request) { (data, response, error) in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("DailyWeatherManager statusCode ======== \(httpResponse.statusCode)")
+            }
             
             if error != nil {
-                self.delegate?.failWithError(error: error!)
+                self.delegate?.didFailWithError(error: error, message: "")
                 return
             }
             
@@ -64,7 +78,7 @@ struct DailyWeatherManager {
             
         } catch {
             print("Something is wrong")
-            delegate?.failWithError(error: error)
+            delegate?.didFailWithError(error: error, message: "")
             return nil
         }
     }

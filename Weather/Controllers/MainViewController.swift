@@ -36,10 +36,6 @@ class MainViewController: UIViewController {
     
     public var didSelectInMenuCallBack : ((String) -> ())?
     
-    // user defaults declaratoon
-    // var searchedData = [String]()
-    
-    
     let sideBarVC = SidebarViewController()
     
     override func viewDidLoad() {
@@ -72,15 +68,8 @@ class MainViewController: UIViewController {
         DropDown.appearance().backgroundColor = UIColor(red: 0.00, green: 0.42, blue: 0.46, alpha: 0.50)
         DropDown.appearance().selectionBackgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
         dropDown.reloadAllComponents()
-        //dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-        //  self.searchField.text = filterData[index]
         
-        //   searchField.addTarget(self, action: #selector(searchData), for: .editingChanged)
-        
-        
-        //}
         print(dropDownArray.count)
-        
         self.didSelectInMenuCallBack = { [weak self] selectedCity
             in
             guard self != nil else { return }
@@ -90,34 +79,9 @@ class MainViewController: UIViewController {
             NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
             
             // Hit api here
-            // API calling using city name input by user
-            self!.showSpinner(onView: self!.view)
-            self!.weatherManager.fetchweather(cityName: selectedCity)
+            self!.apiCallByCityName(city: selectedCity)
         }
     }
-    
-    //    @objc func searchData(sender: UITextField) {
-    //        print ("TextField is changing === \(searchField.text ?? "")")
-    //        self.filterData.removeAll()
-    //        let searchedData: Int = searchField.text!.count
-    //        if searchedData != 0 {
-    //            searching = true
-    //            for items in dropDownArray{
-    //                if let dataToSearch = searchField.text {
-    //                    let range = items.lowercased().range(of: dataToSearch, options: .caseInsensitive, range: nil, locale: nil)
-    //                    if  range != nil   {
-    //                        self.filterData.append(contentsOf: dropDownArray)
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        else  {
-    //            self.filterData = self.dropDownArray
-    //            self.searching = false
-    //        }
-    //
-    //        dropDown.reloadAllComponents()
-    //    }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
@@ -146,14 +110,25 @@ extension MainViewController: UITextFieldDelegate {
         dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
         dropDown.dataSource = dropDownArray
         dropDown.show()
+        
+        // Action triggered on dropdown item selection
+        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            
+            
+            
+            // API calling using city name
+            apiCallByCityName(city: dropDownArray[index])
+        }
+        
     }
+    
     // return when user press return keyword in the keyword
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchField.endEditing(true)
         dropDown.hide()
         return true
-        
     }
+    
     // useful for validation on what user types
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if textField.text != "" {
@@ -168,14 +143,10 @@ extension MainViewController: UITextFieldDelegate {
     //delete text fiels contents after user types search or return keyword
     func textFieldDidEndEditing(_ textField: UITextField) {
         //textfiled.text data passed by user need to be hold
+        //TODO: ?.trimmingCharacters(in: .whitespacesAndNewlines)
         if let city = searchField.text{
             
-            // Hide location icon here
-            self.locationImage.isHidden = true
-            
-            // API calling using city name input by user
-            self.showSpinner(onView: self.view)
-            weatherManager.fetchweather(cityName: city)
+            apiCallByCityName(city: city)
             
             // if dropDownArray count >=10 remove 0 position city and append new city
             if !dropDownArray.contains(city){
@@ -193,14 +164,16 @@ extension MainViewController: UITextFieldDelegate {
         
         searchField.text = ""
     }
-    // filter data in search field
-    //
-    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    //
-    //        return true
-    //    }
-    //
     
+    func apiCallByCityName(city: String){
+        
+        // Hide location icon here
+        self.locationImage.isHidden = true
+        
+        // API calling using city name input by user
+        self.showSpinner(onView: self.view)
+        weatherManager.fetchweather(cityName: city)
+    }
     
 }
 
@@ -222,7 +195,6 @@ extension MainViewController: WeatherManagerDelegate {
             // We make second API call to get 7 days of weatehr report
             // using DailyWeatherManager to fetch 7 days of weather.
             self.dailyWeatherManager.performRequestFor7DaysWeather(latitude: weather.latitude,longitude: weather.longitude)
-            
         }
     }
     func didFailWithError(error: Error) {
@@ -297,6 +269,13 @@ extension MainViewController: UITableViewDataSource {
     
 }
 extension MainViewController: DailyWeatherManagerDelegate{
+    func didFailWithError(error: Error?, message: String?) {
+        print("Something is wrong: Error:\(error.debugDescription) ||| Message:\(message ?? "")")
+        self.removeSpinner()
+        
+        //TODO: show error dialog box with generic message
+    }
+    
     func didGetAllResponse(dailyData: DailyWeatherData) {
         allData = dailyData.daily
         allData.removeFirst()
@@ -305,10 +284,6 @@ extension MainViewController: DailyWeatherManagerDelegate{
             self.predictionTable.reloadData()
             self.removeSpinner()
         }
-    }
-    func failWithError(error: Error) {
-        print("Got error response")
-        self.removeSpinner()
     }
 }
 

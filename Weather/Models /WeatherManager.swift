@@ -10,7 +10,7 @@ import CoreLocation
 
 protocol WeatherManagerDelegate {
     func didUpdateWeather (_ weatherManager: WeatherManager, weather: WeatherModel)
-    func didFailWithError(error: Error)
+    func didFailWithError(error: Error?, message: String?)
 }
 struct WeatherManager {
     var  delegate : WeatherManagerDelegate?
@@ -32,11 +32,21 @@ struct WeatherManager {
     //for networking communicating  app to webserver(openweathermap)
     func performRequest(with urlString: String){
         if let url = URL(string: urlString){
-            let session = URLSession(configuration: .default)
+            
+            let sessionConfig = URLSessionConfiguration.default
+            sessionConfig.timeoutIntervalForRequest = 10.0
+            sessionConfig.timeoutIntervalForResource = 20.0
+            
+            let session = URLSession(configuration: sessionConfig)
+            
             let task = session.dataTask(with: url) { data, response, error in
             
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("WeatherManager statusCode ======== \(httpResponse.statusCode)")
+                }
+                
                 if error != nil{
-                    delegate?.didFailWithError(error: error!)
+                    delegate?.didFailWithError(error: error, message: "")
                     return
                 }
                 if let safeData = data{
@@ -46,6 +56,9 @@ struct WeatherManager {
                 }
             }
             task.resume()
+        } else {
+            delegate?.didFailWithError(error: nil, message: "URL is not valid")
+            print("URL: Invalide")
         }
     }
     func parseJSON(_ weatherData: Data) -> WeatherModel? {
@@ -63,7 +76,7 @@ struct WeatherManager {
             return weather
         }
         catch {
-            delegate?.didFailWithError(error: error)
+            delegate?.didFailWithError(error: error, message: "")
             return nil
         }
     }
