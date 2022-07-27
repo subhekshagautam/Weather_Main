@@ -15,52 +15,84 @@ protocol WeatherManagerDelegate {
 struct WeatherManager {
     var  delegate : WeatherManagerDelegate?
     
-    let weatherURL =
-    //dosent worry about the order of parameter
-    "https://api.openweathermap.org/data/2.5/weather?appid=9a7ddade611d6fc3684c02d71471a10c&units=metric"
+    let apiKey = "9a7ddade611d6fc3684c02d71471a10c"
+    let baseURL = "https://api.openweathermap.org/data/2.5/weather"
+    
     
     func fetchweather(cityName: String){
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        performRequest(with: urlString)
+        //URLComponents to the rescue!
+        var urlBuilder = URLComponents(string: baseURL)
+        //  If you want to pass query in standard way
+        
+        urlBuilder?.queryItems = [
+            URLQueryItem(name: "appid", value: apiKey),
+            URLQueryItem(name: "q", value: cityName),
+            URLQueryItem(name: "units", value: "metric"),
+        ]
+        
+        guard let cityUrl = urlBuilder?.url else {
+            delegate?.didFailWithError(error: nil, message: "Invalid URL")
+            print("URL: Invalide")
+            return
+        }
+        
+        performRequest(with: cityUrl)
     }
     
     func fetchWeather(latitude:CLLocationDegrees , longitude: CLLocationDegrees){
-        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
-        performRequest(with: urlString)
+        //URLComponents to the rescue!
+        var urlBuilder = URLComponents(string: baseURL)
+        //  If you want to pass query in standard way
+        
+        urlBuilder?.queryItems = [
+            URLQueryItem(name: "appid", value: apiKey),
+            URLQueryItem(name: "lat", value: String(latitude)),
+            URLQueryItem(name: "lon", value: String(longitude)),
+            URLQueryItem(name: "units", value: "metric"),
+        ]
+        
+        guard let latLongUrl = urlBuilder?.url else {
+            delegate?.didFailWithError(error: nil, message: "Invalid URL")
+            print("URL: Invalide")
+            return
+        }
+        
+        performRequest(with: latLongUrl)
     }
     
     //for networking communicating  app to webserver(openweathermap)
-    func performRequest(with urlString: String){
-        if let url = URL(string: urlString){
+    func performRequest(with requestUrl: URL){
+        
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "GET"
+        
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 10.0
+        sessionConfig.timeoutIntervalForResource = 20.0
+        
+        let session = URLSession(configuration: sessionConfig)
+        
+        session.dataTask(with: request) { data, response, error in
             
-            let sessionConfig = URLSessionConfiguration.default
-            sessionConfig.timeoutIntervalForRequest = 10.0
-            sessionConfig.timeoutIntervalForResource = 20.0
+            if let httpResponse = response as? HTTPURLResponse {
+                print("WeatherManager statusCode ======== \(httpResponse.statusCode)")
+            }
             
-            let session = URLSession(configuration: sessionConfig)
+            if error != nil{
+                delegate?.didFailWithError(error: error, message: "")
+                return
+            }
             
-            let task = session.dataTask(with: url) { data, response, error in
-            
-                if let httpResponse = response as? HTTPURLResponse {
-                    print("WeatherManager statusCode ======== \(httpResponse.statusCode)")
-                }
-                
-                if error != nil{
-                    delegate?.didFailWithError(error: error, message: "")
-                    return
-                }
-                if let safeData = data{
-                    if let weather = self.parseJSON(safeData){
-                        self.delegate? .didUpdateWeather(self, weather: weather)
-                    }
+            if let safeData = data{
+                if let weather = self.parseJSON(safeData){
+                    self.delegate? .didUpdateWeather(self, weather: weather)
                 }
             }
-            task.resume()
-        } else {
-            delegate?.didFailWithError(error: nil, message: "URL is not valid")
-            print("URL: Invalide")
-        }
+        }.resume()
+        
     }
+    
+    // Parsing response
     func parseJSON(_ weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do{
@@ -81,9 +113,3 @@ struct WeatherManager {
         }
     }
 }
-
-
-
-
-
-

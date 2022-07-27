@@ -113,9 +113,6 @@ extension MainViewController: UITextFieldDelegate {
         
         // Action triggered on dropdown item selection
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-            
-            
-            
             // API calling using city name
             apiCallByCityName(city: dropDownArray[index])
         }
@@ -143,8 +140,7 @@ extension MainViewController: UITextFieldDelegate {
     //delete text fiels contents after user types search or return keyword
     func textFieldDidEndEditing(_ textField: UITextField) {
         //textfiled.text data passed by user need to be hold
-        //TODO: ?.trimmingCharacters(in: .whitespacesAndNewlines)
-        if let city = searchField.text{
+        if let city = searchField.text?.trimmingCharacters(in: .whitespacesAndNewlines){
             
             apiCallByCityName(city: city)
             
@@ -162,6 +158,7 @@ extension MainViewController: UITextFieldDelegate {
             }
         }
         
+        //delete text fiels contents after user types search or return keyword
         searchField.text = ""
     }
     
