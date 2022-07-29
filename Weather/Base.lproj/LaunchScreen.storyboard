@@ -17,11 +17,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="OOr-u4-Vxa">
-                                <rect key="frame" x="122" y="363" width="170.5" height="170.5"/>
+                                <rect key="frame" x="72" y="313" width="270" height="270"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="270" id="Ziy-eL-PO7"/>
+                                    <constraint firstAttribute="height" constant="270" id="gHN-fa-Qdw"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="0.70932859179999996" green="0.8381569982" blue="0.63134104010000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.0" green="0.47450980392156861" blue="0.41960784313725491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="OOr-u4-Vxa" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="9Ti-Xd-jNA"/>
                             <constraint firstItem="OOr-u4-Vxa" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nJz-0K-PMm"/>
@@ -34,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launchScreen" width="170.5" height="170.5"/>
+        <image name="launchScreen" width="80" height="80"/>
     </resources>
 </document>
