@@ -151,5 +151,8 @@ extension UIViewController {
     }
     @objc func hideKeyword(){
         view.endEditing(true)
+        
+        // Hide slide menu if it's open after touching main screen.
+        NotificationCenter.default.post(name: NSNotification.Name("HideSideMenu"), object: nil)
     }
 }

@@ -26,6 +26,11 @@ class ContainterViewController:UIViewController {
                                                name: NSNotification.Name("ToggleSideMenu"),
                                                object: nil)
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(hideSideMenu),
+                                               name: NSNotification.Name("HideSideMenu"),
+                                               object: nil)
+        
         
         self.mainVC = self.storyboard?.instantiateViewController(withIdentifier: "MainViewController") as? MainViewController
         self.addContainerView(content: self.mainVC, backgroundView: self.mainCointainerView)
@@ -34,29 +39,41 @@ class ContainterViewController:UIViewController {
         self.sideVC.didSelectInMenuCallBack = { [weak self]  selectedCity in
             guard let `self` = self else { return }
             
-          self.mainVC.didSelectInMenuCallBack?(selectedCity)
+            self.mainVC.didSelectInMenuCallBack?(selectedCity)
         }
         self.addContainerView(content: self.sideVC, backgroundView: self.sideContainerView)
         
-      //  gesture = UITapGestureRecognizer(target: self, action: #selector(ContainterViewController.toggleSideMenu))
-
+        //  gesture = UITapGestureRecognizer(target: self, action: #selector(ContainterViewController.toggleSideMenu))
+        
     }
     @objc func toggleSideMenu() {
         if sideMenuOpen {
             sideMenuOpen = false
             SideMenuConstraints.constant = -240
-         //   self.view.removeGestureRecognizer(gesture!)
+            //   self.view.removeGestureRecognizer(gesture!)
             
         } else {
             sideMenuOpen = true
             SideMenuConstraints.constant = 0
-           // self.view.addGestureRecognizer(gesture!)
+            // self.view.addGestureRecognizer(gesture!)
         }
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
-// MARK:-add viewcontroller to container
+    
+    @objc func hideSideMenu() {
+        if sideMenuOpen {
+            sideMenuOpen = false
+            SideMenuConstraints.constant = -240
+            
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    // MARK:-add viewcontroller to container
     fileprivate func addContainerView(content:UIViewController, backgroundView : UIView){
         
         self.addChild(content)

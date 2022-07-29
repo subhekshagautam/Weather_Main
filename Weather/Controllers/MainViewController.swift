@@ -26,7 +26,7 @@ class MainViewController: UIViewController {
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
     var gesture : UITapGestureRecognizer?
-
+    
     let defaults = UserDefaults.standard
     
     let dropDown = DropDown()
@@ -39,6 +39,8 @@ class MainViewController: UIViewController {
     public var didSelectInMenuCallBack : ((String) -> ())?
     
     let sideBarVC = SidebarViewController()
+    
+    var isClickedDropDown = false
     
     override func viewDidLoad() {
         
@@ -76,9 +78,10 @@ class MainViewController: UIViewController {
         
         // Action triggered on dropdown item selection
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            isClickedDropDown = true
             hideKeyword()
             // API calling using city name
-            apiCallByCityName(city: dropDownArray[index])
+            apiCallByCityName(city: filteredArray[index])
             //dropDownArray = searchedArray
         }
         // filter string in user pressed text field
@@ -112,9 +115,13 @@ class MainViewController: UIViewController {
         } else {
             filteredArray = dropDownArray
         }
-
+        
         dropDown.dataSource = filteredArray
-        dropDown.reloadAllComponents()
+        if dropDown.isHidden{
+            dropDown.show()
+        } else {
+            dropDown.reloadAllComponents()
+        }
     }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
@@ -130,12 +137,14 @@ extension MainViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // if dropdown is showing update else show
         dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
+        filteredArray = dropDownArray
         dropDown.dataSource = dropDownArray
         dropDown.show()
     }
     
     // return when user press return keyword in the keyword
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        isClickedDropDown = false
         searchField.endEditing(true)
         dropDown.hide()
         hideKeyword()
@@ -145,7 +154,7 @@ extension MainViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         //textfiled.text data passed by user need to be hold
         if let city = searchField.text?.trimmingCharacters(in: .whitespacesAndNewlines){
-            if(!city.isEmpty && !isShowingSpinner()) {
+            if(!city.isEmpty && !isShowingSpinner() && !isClickedDropDown) {
                 apiCallByCityName(city: city)
             }
         }
