@@ -31,6 +31,13 @@ extension UIViewController {
         }
     }
     
+    func isShowingSpinner() -> Bool{
+        if vSpinner == nil{
+            return false
+        }
+        return true
+    }
+    
     func removeSpinner() {
         DispatchQueue.main.async {
             vSpinner?.removeFromSuperview()

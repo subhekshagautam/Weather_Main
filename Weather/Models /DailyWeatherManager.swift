@@ -70,7 +70,6 @@ struct DailyWeatherManager {
     }
     
     func parseJSON(_ dailyData: Data) -> DailyWeatherData? {
-        
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(DailyWeatherData.self, from: dailyData)

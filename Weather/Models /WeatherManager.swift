@@ -62,6 +62,7 @@ struct WeatherManager {
     
     //for networking communicating  app to webserver(openweathermap)
     func performRequest(with requestUrl: URL){
+        print("WeatherManager Url ======== \(requestUrl.absoluteURL)")
         
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "GET"

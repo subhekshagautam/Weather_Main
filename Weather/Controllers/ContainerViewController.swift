@@ -17,6 +17,7 @@ class ContainterViewController:UIViewController {
     var sideMenuOpen = false
     var mainVC : MainViewController!
     var sideVC : SidebarViewController!
+    var gesture : UITapGestureRecognizer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,7 @@ class ContainterViewController:UIViewController {
                                                selector: #selector(toggleSideMenu),
                                                name: NSNotification.Name("ToggleSideMenu"),
                                                object: nil)
+        
         
         self.mainVC = self.storyboard?.instantiateViewController(withIdentifier: "MainViewController") as? MainViewController
         self.addContainerView(content: self.mainVC, backgroundView: self.mainCointainerView)
@@ -36,16 +38,19 @@ class ContainterViewController:UIViewController {
         }
         self.addContainerView(content: self.sideVC, backgroundView: self.sideContainerView)
         
-        
+      //  gesture = UITapGestureRecognizer(target: self, action: #selector(ContainterViewController.toggleSideMenu))
+
     }
     @objc func toggleSideMenu() {
         if sideMenuOpen {
             sideMenuOpen = false
             SideMenuConstraints.constant = -240
+         //   self.view.removeGestureRecognizer(gesture!)
             
         } else {
             sideMenuOpen = true
             SideMenuConstraints.constant = 0
+           // self.view.addGestureRecognizer(gesture!)
         }
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()

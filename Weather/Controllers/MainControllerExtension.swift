@@ -26,8 +26,9 @@ extension  UITextField{
 
 extension MainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
+        if let location = locations.first {
             locationManager.stopUpdatingLocation()
+            
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             print("lat: \(lat), long: \(lon)")
@@ -75,7 +76,7 @@ extension MainViewController: WeatherManagerDelegate {
         
         defaults.set(self.dropDownArray,forKey: userDefaultKey)
         for items in dropDownArray{
-            print("default ======== \(items)")
+            print("default: \(items)")
         }
     }
     func didFailWithError(error: Error) {
@@ -125,7 +126,10 @@ extension MainViewController: DailyWeatherManagerDelegate{
         print("Something is wrong: Error:\(error.debugDescription) ||| Message:\(message ?? "")")
         self.removeSpinner()
         
-        //TODO: show error dialog box with generic message
+        // Show error dialog box with generic message
+        DispatchQueue.main.async {
+            UIAlertController.alert(title:"Error", msg:"Please type correct city name", target: self)
+        }
     }
     
     func didGetAllResponse(dailyData: DailyWeatherData) {

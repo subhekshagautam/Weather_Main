@@ -252,7 +252,6 @@
                             <constraint firstAttribute="trailing" secondItem="al5-jy-8mb" secondAttribute="trailing" id="xWw-8A-ylw"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="4cS-yE-oAS"/>
                     <connections>
                         <outlet property="cityLabel" destination="MBT-fk-5Mq" id="C7q-kr-DFW"/>
                         <outlet property="conditionImage" destination="GFc-su-gTf" id="i4M-Db-DjI"/>

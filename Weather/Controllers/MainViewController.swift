@@ -25,12 +25,14 @@ class MainViewController: UIViewController {
     var dailyWeatherManager = DailyWeatherManager()
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
-    
+    var gesture : UITapGestureRecognizer?
+
     let defaults = UserDefaults.standard
     
     let dropDown = DropDown()
     var searching = false
     var dropDownArray = ["Sydney", "Melbourne", "Perth"]
+    var filteredArray = [String]()
     
     let userDefaultKey = "dropdown"
     
@@ -58,6 +60,8 @@ class MainViewController: UIViewController {
         dailyWeatherManager.delegate = self
         
         dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
+        filteredArray = dropDownArray
+        print("dropDownArray ======== \(dropDownArray.count)")
         
         // dropdown part
         dropDown.anchorView = searchField
@@ -75,7 +79,10 @@ class MainViewController: UIViewController {
             hideKeyword()
             // API calling using city name
             apiCallByCityName(city: dropDownArray[index])
+            //dropDownArray = searchedArray
         }
+        // filter string in user pressed text field
+        searchField.addTarget(self, action: #selector(searchRecords(_:)), for: .editingChanged)
         
         self.didSelectInMenuCallBack = { [weak self] selectedCity in
             guard self != nil else { return }
@@ -90,6 +97,24 @@ class MainViewController: UIViewController {
         
         //Hiding keyword when user taps on main screen
         hideKeyboardWhenTappedAround()
+    }
+    @objc func searchRecords(_ textField: UITextField){
+        self.filteredArray.removeAll()
+        if textField.text?.count != 0 {
+            for city in dropDownArray{
+                if let cityTosearch = textField.text{
+                    let range = city.lowercased().range(of: cityTosearch, options: .caseInsensitive, range: nil , locale: nil)
+                    if range != nil {
+                        self.filteredArray.append(city)
+                    }
+                }
+            }
+        } else {
+            filteredArray = dropDownArray
+        }
+
+        dropDown.dataSource = filteredArray
+        dropDown.reloadAllComponents()
     }
     
     @IBAction func sideMenuPressed(_ sender: Any) {
@@ -120,7 +145,7 @@ extension MainViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         //textfiled.text data passed by user need to be hold
         if let city = searchField.text?.trimmingCharacters(in: .whitespacesAndNewlines){
-            if !city.isEmpty{
+            if(!city.isEmpty && !isShowingSpinner()) {
                 apiCallByCityName(city: city)
             }
         }
