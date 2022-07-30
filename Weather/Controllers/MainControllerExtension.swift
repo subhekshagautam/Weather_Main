@@ -107,7 +107,7 @@ extension MainViewController: UITableViewDataSource {
         
         // convert miliseconds into date fromat
 
-        cell.dateLabel.text = getFormattedDate(date: data.dt)
+        cell.dateLabel.text = WeatherDateFormatter().getFormattedDate(dateInSec: data.dt)
         cell.minTempLabel.text = String (format: "%.0f", data.temp.min)
         cell.maxTempLabel.text = String (format: "%.0f", data.temp.max)
         
