@@ -106,11 +106,8 @@ extension MainViewController: UITableViewDataSource {
         cell.conditionImage.image = UIImage(systemName: weatherModel.conditionName)
         
         // convert miliseconds into date fromat
-        let date = Date(timeIntervalSince1970: (Double(data.dt)))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM"
-        cell.dateLabel.text = String((dateFormatter.string(from: date)))
-        
+
+        cell.dateLabel.text = getFormattedDate(date: data.dt)
         cell.minTempLabel.text = String (format: "%.0f", data.temp.min)
         cell.maxTempLabel.text = String (format: "%.0f", data.temp.max)
         
