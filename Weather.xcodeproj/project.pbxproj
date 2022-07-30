@@ -119,7 +119,6 @@
 				0729E8AA287D220200247922 /* Assets.xcassets */,
 				0729E8A1287D220000247922 /* AppDelegate.swift */,
 				0729E8A3287D220000247922 /* SceneDelegate.swift */,
-				0729E8AC287D220200247922 /* LaunchScreen.storyboard */,
 				0729E8AF287D220200247922 /* Info.plist */,
 			);
 			path = Weather;
@@ -129,10 +128,11 @@
 			isa = PBXGroup;
 			children = (
 				0729E8C0287E4BA700247922 /* TableViewCell.xib */,
-				0729E8BF287E4BA700247922 /* TableViewCell.swift */,
 				0729E8A7287D220000247922 /* Main.storyboard */,
-				0724901A28842D36006C5037 /* MainViewTableCell.swift */,
 				0724901B28842D36006C5037 /* MainViewTableCell.xib */,
+				0729E8AC287D220200247922 /* LaunchScreen.storyboard */,
+				0729E8BF287E4BA700247922 /* TableViewCell.swift */,
+				0724901A28842D36006C5037 /* MainViewTableCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
