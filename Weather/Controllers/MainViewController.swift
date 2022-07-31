@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import DropDown
 
+
 class MainViewController: UIViewController {
     
     @IBOutlet weak var locationImage: UIImageView!
@@ -19,7 +20,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var predictionTable: UITableView!
-    
+    @IBOutlet weak var favoriteIcon: HeartButton!
     
     var allDaysData = [Daily]()
     var dailyWeatherManager = DailyWeatherManager()
@@ -33,8 +34,10 @@ class MainViewController: UIViewController {
     var searching = false
     var dropDownArray = ["Sydney", "Melbourne", "Perth"]
     var filteredArray = [String]()
+    var favouriteArray = [String]()
     
-    let userDefaultKey = "dropdown"
+    let dropdownUserDefaultKey = "dropdown"
+    let favouriteUserDefaultKey = "favouriteIcon"
     
     public var didSelectInMenuCallBack : ((String) -> ())?
     
@@ -51,7 +54,6 @@ class MainViewController: UIViewController {
         locationManager.requestLocation()
         
         searchField.setLeftImage(imageName: "magnifyingglass")
-        
         let nib = UINib(nibName: "MainViewTableCell", bundle: nil)
         predictionTable.register(nib, forCellReuseIdentifier: "MainViewTableCell")
         self.predictionTable.dataSource = self
@@ -61,9 +63,14 @@ class MainViewController: UIViewController {
         searchField.delegate = self
         dailyWeatherManager.delegate = self
         
-        dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
+        //setting previous data to array so that we get all saved data when run app again
+        favouriteArray = defaults.array(forKey: favouriteUserDefaultKey) as? [String] ?? favouriteArray
+        dropDownArray = defaults.array(forKey: dropdownUserDefaultKey) as? [String] ?? dropDownArray
+        
         filteredArray = dropDownArray
         print("dropDownArray ======== \(dropDownArray.count)")
+        
+        
         
         // dropdown part
         dropDown.anchorView = searchField
@@ -97,6 +104,9 @@ class MainViewController: UIViewController {
             // Hit api here
             self!.apiCallByCityName(city: selectedCity)
         }
+      // heart button
+        favoriteIcon.addTarget(self, action: #selector(favouriteIconPressed(_:)), for: .touchUpInside)
+     
         
         //Hiding keyword when user taps on main screen
         hideKeyboardWhenTappedAround()
@@ -127,16 +137,34 @@ class MainViewController: UIViewController {
     @IBAction func sideMenuPressed(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
+    
+   @objc private func favouriteIconPressed(_ sender: UIButton) {
+        
+        guard let button = sender as? HeartButton else { return }
+        
+        // Check if the city is already on favourite list of not
+        let cityName = cityLabel.text
+        if(cityName != nil && !favouriteArray.contains(cityName ?? "-")){
+            // If city is not listed on favorite list then add to favourite and update icon
+            favouriteArray.append(cityName!)
+            defaults.set(self.favouriteArray,forKey: favouriteUserDefaultKey)
+            button.flipLikedState(liked: true)
+        } else if(cityName != nil && favouriteArray.contains(cityName ?? "-")){
+            // City is already listed as favorite. Remove from favorite and update icon
+            favouriteArray.remove(at: favouriteArray.firstIndex(of: cityName!)!)
+            defaults.set(self.favouriteArray,forKey: favouriteUserDefaultKey)
+            button.flipLikedState(liked: false)
+        }
+    }
+    
 }
-
-
 //MARK: - UI TextField Delegate
 extension MainViewController: UITextFieldDelegate {
     
     //calling for the first time when user clicks on UITextField
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // if dropdown is showing update else show
-        dropDownArray = defaults.array(forKey: userDefaultKey) as? [String] ?? dropDownArray
+        dropDownArray = defaults.array(forKey: dropdownUserDefaultKey) as? [String] ?? dropDownArray
         filteredArray = dropDownArray
         dropDown.dataSource = dropDownArray
         dropDown.show()
@@ -174,3 +202,5 @@ extension MainViewController: UITextFieldDelegate {
     }
     
 }
+
+

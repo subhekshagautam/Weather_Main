@@ -13,9 +13,10 @@ class SidebarViewController: UIViewController {
     
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    
+    let defaults = UserDefaults.standard
     public var didSelectInMenuCallBack : ((String) -> ())?
     var sideMenu = ["Sydney","Perth", "Melbourne"]
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,7 @@ class SidebarViewController: UIViewController {
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
         
     }
     
@@ -39,9 +41,25 @@ extension SidebarViewController: UITableViewDelegate{
         let selectedCity = sideMenu[indexPath.row]
         print("City selected : \(selectedCity)")
         self.didSelectInMenuCallBack?(selectedCity)
-        
+    }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+            // remove the item from the data model
+            sideMenu.remove(at: indexPath.row)
+            
+            // delete the table view row
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        } else if editingStyle == .insert {
+            // Not used in our example, but if you were adding a new row, this is where you would do it.
+        }
     }
 }
+
 
 //MARK: - TableView Datasource
 extension SidebarViewController: UITableViewDataSource {
