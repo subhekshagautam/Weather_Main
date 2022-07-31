@@ -133,7 +133,7 @@
                                                         </connections>
                                                     </button>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ac7-kA-LnG">
-                                                        <rect key="frame" x="50" y="0.0" width="324" height="40"/>
+                                                        <rect key="frame" x="50" y="0.0" width="274" height="40"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="done"/>
@@ -143,6 +143,13 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGN-CI-xGj" customClass="HeartButton" customModule="Weather" customModuleProvider="target">
+                                                        <rect key="frame" x="334" y="0.0" width="40" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="XzA-I8-bol"/>
+                                                            <constraint firstAttribute="width" constant="40" id="aEO-aq-ODA"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="EMX-9q-ZxE"/>
@@ -255,6 +262,7 @@
                     <connections>
                         <outlet property="cityLabel" destination="MBT-fk-5Mq" id="C7q-kr-DFW"/>
                         <outlet property="conditionImage" destination="GFc-su-gTf" id="i4M-Db-DjI"/>
+                        <outlet property="favoriteIcon" destination="uGN-CI-xGj" id="H80-UH-vyh"/>
                         <outlet property="locationImage" destination="j45-5X-sIq" id="tdB-i2-NrC"/>
                         <outlet property="mainBackground" destination="h8n-Js-YDt" id="kAZ-eg-yCI"/>
                         <outlet property="predictionTable" destination="Jmk-6K-5f1" id="qhh-0U-bg6"/>

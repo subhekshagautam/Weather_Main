@@ -51,12 +51,12 @@ extension MainViewController: CLLocationManagerDelegate {
 extension MainViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
-        
+        let cityName = weather.cityName.capitalized
         //Here you get API response from first API call ie from WeatherManager
         DispatchQueue.main.async {
             self.temperatureLabel.text = weather.temperatureString
             self.conditionImage.image = UIImage(systemName: weather.conditionName)
-            self.cityLabel.text = weather.cityName
+            self.cityLabel.text = cityName
             
             // Make main backgroud dynamic
             self.mainBackground.image = UIImage(named: weather.backgroundName)
@@ -64,17 +64,20 @@ extension MainViewController: WeatherManagerDelegate {
             // We make second API call to get 7 days of weatehr report
             // using DailyWeatherManager to fetch 7 days of weather.
             self.dailyWeatherManager.performRequestFor7DaysWeather(latitude: weather.latitude,longitude: weather.longitude)
+            
+            // Update favorite icon after getting API response
+            self.favoriteIcon.flipLikedState(liked: self.favouriteArray.contains(cityName))
         }
         //Saving only from sucess cities response on user defaults
         // if dropDownArray count >=10 remove 0 position city and append new city
-        if !dropDownArray.contains(weather.cityName){
+        if !dropDownArray.contains(cityName){
             if dropDownArray.count >= 10{
                 dropDownArray.remove(at: 0)
             }
-            dropDownArray.append (weather.cityName.capitalized)
+            dropDownArray.append (cityName)
         }
         
-        defaults.set(self.dropDownArray,forKey: userDefaultKey)
+        defaults.set(self.dropDownArray,forKey: dropdownUserDefaultKey)
         for items in dropDownArray{
             print("default: \(items)")
         }
