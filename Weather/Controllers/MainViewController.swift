@@ -36,10 +36,11 @@ class MainViewController: UIViewController {
     var filteredArray = [String]()
     var favouriteArray = [String]()
     
-    let dropdownUserDefaultKey = "dropdown"
-    let favouriteUserDefaultKey = "favouriteIcon"
-    
     public var didSelectInMenuCallBack : ((String) -> ())?
+    
+    public var didFavoriteAddedCallBack : (([String]) -> ())?
+    
+    public var didDeletedCityInMenuCallBack : ((String) -> ())?
     
     let sideBarVC = SidebarViewController()
     
@@ -64,8 +65,8 @@ class MainViewController: UIViewController {
         dailyWeatherManager.delegate = self
         
         //setting previous data to array so that we get all saved data when run app again
-        favouriteArray = defaults.array(forKey: favouriteUserDefaultKey) as? [String] ?? favouriteArray
-        dropDownArray = defaults.array(forKey: dropdownUserDefaultKey) as? [String] ?? dropDownArray
+        favouriteArray = defaults.array(forKey: Constants.favouriteUserDefaultKey) as? [String] ?? favouriteArray
+        dropDownArray = defaults.array(forKey: Constants.dropdownUserDefaultKey) as? [String] ?? dropDownArray
         
         filteredArray = dropDownArray
         print("dropDownArray ======== \(dropDownArray.count)")
@@ -104,10 +105,19 @@ class MainViewController: UIViewController {
             // Hit api here
             self!.apiCallByCityName(city: selectedCity)
         }
-      // heart button
+        // heart button
         favoriteIcon.addTarget(self, action: #selector(favouriteIconPressed(_:)), for: .touchUpInside)
-     
         
+        self.didDeletedCityInMenuCallBack = { [weak self] deletedCity in
+            guard self != nil else { return }
+            
+            if(self!.favouriteArray.contains(deletedCity)){
+                // City is already listed as favorite. Remove from favorite and update icon
+                self!.favouriteArray.remove(at: self!.favouriteArray.firstIndex(of: deletedCity)!)
+                self!.favoriteIcon.flipLikedState(liked: false)
+            }
+            
+        }
         //Hiding keyword when user taps on main screen
         hideKeyboardWhenTappedAround()
     }
@@ -138,7 +148,7 @@ class MainViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name("ToggleSideMenu"), object: nil)
     }
     
-   @objc private func favouriteIconPressed(_ sender: UIButton) {
+    @objc private func favouriteIconPressed(_ sender: UIButton) {
         
         guard let button = sender as? HeartButton else { return }
         
@@ -147,14 +157,16 @@ class MainViewController: UIViewController {
         if(cityName != nil && !favouriteArray.contains(cityName ?? "-")){
             // If city is not listed on favorite list then add to favourite and update icon
             favouriteArray.append(cityName!)
-            defaults.set(self.favouriteArray,forKey: favouriteUserDefaultKey)
+            defaults.set(self.favouriteArray,forKey: Constants.favouriteUserDefaultKey)
             button.flipLikedState(liked: true)
         } else if(cityName != nil && favouriteArray.contains(cityName ?? "-")){
             // City is already listed as favorite. Remove from favorite and update icon
             favouriteArray.remove(at: favouriteArray.firstIndex(of: cityName!)!)
-            defaults.set(self.favouriteArray,forKey: favouriteUserDefaultKey)
+            defaults.set(self.favouriteArray,forKey: Constants.favouriteUserDefaultKey)
             button.flipLikedState(liked: false)
         }
+        
+        self.didFavoriteAddedCallBack?(favouriteArray)
     }
     
 }
@@ -164,7 +176,7 @@ extension MainViewController: UITextFieldDelegate {
     //calling for the first time when user clicks on UITextField
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // if dropdown is showing update else show
-        dropDownArray = defaults.array(forKey: dropdownUserDefaultKey) as? [String] ?? dropDownArray
+        dropDownArray = defaults.array(forKey: Constants.dropdownUserDefaultKey) as? [String] ?? dropDownArray
         filteredArray = dropDownArray
         dropDown.dataSource = dropDownArray
         dropDown.show()

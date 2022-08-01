@@ -14,12 +14,17 @@ class SidebarViewController: UIViewController {
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     let defaults = UserDefaults.standard
-    public var didSelectInMenuCallBack : ((String) -> ())?
-    var sideMenu = ["Sydney","Perth", "Melbourne"]
     
+    public var didSelectInMenuCallBack : ((String) -> ())?
+    public var didFavoriteAddedCallBack : (([String]) -> ())?
+    public var didDeletedCityInMenuCallBack : ((String) -> ())?
+    
+    var sideMenu = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        sideMenu = defaults.array(forKey: Constants.favouriteUserDefaultKey) as? [String] ?? sideMenu
         
         let nib = UINib(nibName: "TableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cellidentity")
@@ -27,16 +32,20 @@ class SidebarViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        
+        self.didFavoriteAddedCallBack = { [weak self] favoriteCities in
+            guard self != nil else {return}
+            self?.sideMenu = favoriteCities
+            print(self!.sideMenu.count)
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
 }
 //MARK: - Tableview Delegate
 extension SidebarViewController: UITableViewDelegate{
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCity = sideMenu[indexPath.row]
         print("City selected : \(selectedCity)")
@@ -49,8 +58,10 @@ extension SidebarViewController: UITableViewDelegate{
         if editingStyle == .delete {
             
             // remove the item from the data model
+            self.didDeletedCityInMenuCallBack?(sideMenu[indexPath.row])
             sideMenu.remove(at: indexPath.row)
-            
+            defaults.set(self.sideMenu,forKey: Constants.favouriteUserDefaultKey)
+
             // delete the table view row
             tableView.deleteRows(at: [indexPath], with: .fade)
             

@@ -77,7 +77,7 @@ extension MainViewController: WeatherManagerDelegate {
             dropDownArray.append (cityName)
         }
         
-        defaults.set(self.dropDownArray,forKey: dropdownUserDefaultKey)
+        defaults.set(self.dropDownArray,forKey: Constants.dropdownUserDefaultKey)
         for items in dropDownArray{
             print("default: \(items)")
         }

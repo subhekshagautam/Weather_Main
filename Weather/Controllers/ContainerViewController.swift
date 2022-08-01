@@ -43,8 +43,19 @@ class ContainterViewController:UIViewController {
         }
         self.addContainerView(content: self.sideVC, backgroundView: self.sideContainerView)
         
-        //  gesture = UITapGestureRecognizer(target: self, action: #selector(ContainterViewController.toggleSideMenu))
+        //From MainVC to ContainerVC to SidebarVC
+        self.mainVC.didFavoriteAddedCallBack = { [weak self]  favoriteCities in
+            guard let `self` = self else { return }
+            
+            self.sideVC.didFavoriteAddedCallBack?(favoriteCities)
+        }
         
+        //
+        self.sideVC.didDeletedCityInMenuCallBack = { [weak self]  deletedCity in
+            guard let `self` = self else { return }
+            
+            self.mainVC.didDeletedCityInMenuCallBack?(deletedCity)
+        }
     }
     @objc func toggleSideMenu() {
         if sideMenuOpen {

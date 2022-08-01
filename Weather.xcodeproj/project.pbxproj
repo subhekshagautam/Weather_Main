@@ -26,6 +26,7 @@
 		0729E8C1287E4BA700247922 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0729E8BF287E4BA700247922 /* TableViewCell.swift */; };
 		0729E8C2287E4BA700247922 /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0729E8C0287E4BA700247922 /* TableViewCell.xib */; };
 		0729E8C42880DA0D00247922 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0729E8C32880DA0D00247922 /* ContainerViewController.swift */; };
+		0750D06428975C150058CB91 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750D06328975C150058CB91 /* Constants.swift */; };
 		07AB42B528916007008BEDC8 /* MainControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AB42B428916007008BEDC8 /* MainControllerExtension.swift */; };
 		07AB42B728916B6D008BEDC8 /* AlertBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AB42B628916B6D008BEDC8 /* AlertBoxView.swift */; };
 		07AB42DB2894D517008BEDC8 /* WeatherDateFormater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AB42DA2894D517008BEDC8 /* WeatherDateFormater.swift */; };
@@ -73,6 +74,7 @@
 		0729E8BF287E4BA700247922 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		0729E8C0287E4BA700247922 /* TableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableViewCell.xib; sourceTree = "<group>"; };
 		0729E8C32880DA0D00247922 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		0750D06328975C150058CB91 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		07AB42B428916007008BEDC8 /* MainControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainControllerExtension.swift; sourceTree = "<group>"; };
 		07AB42B628916B6D008BEDC8 /* AlertBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBoxView.swift; sourceTree = "<group>"; };
 		07AB42DA2894D517008BEDC8 /* WeatherDateFormater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDateFormater.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				07AB42B628916B6D008BEDC8 /* AlertBoxView.swift */,
 				07AB42DA2894D517008BEDC8 /* WeatherDateFormater.swift */,
 				07AB43432896250F008BEDC8 /* HeartButton.swift */,
+				0750D06328975C150058CB91 /* Constants.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				0729E8C42880DA0D00247922 /* ContainerViewController.swift in Sources */,
 				07AB42B528916007008BEDC8 /* MainControllerExtension.swift in Sources */,
 				0729E8B6287E42FC00247922 /* SidebarViewController.swift in Sources */,
+				0750D06428975C150058CB91 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
