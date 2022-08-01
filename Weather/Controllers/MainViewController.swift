@@ -114,7 +114,9 @@ class MainViewController: UIViewController {
             if(self!.favouriteArray.contains(deletedCity)){
                 // City is already listed as favorite. Remove from favorite and update icon
                 self!.favouriteArray.remove(at: self!.favouriteArray.firstIndex(of: deletedCity)!)
+                if (deletedCity == self!.cityLabel.text){
                 self!.favoriteIcon.flipLikedState(liked: false)
+                }
             }
             
         }
