@@ -51,8 +51,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
+        self.locationManager.requestWhenInUseAuthorization()
         
         searchField.setLeftImage(imageName: "magnifyingglass")
         let nib = UINib(nibName: "MainViewTableCell", bundle: nil)

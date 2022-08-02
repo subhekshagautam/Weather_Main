@@ -23,8 +23,25 @@ extension  UITextField{
 }
 
 //MARK: - cllocationmanager delegate
-
 extension MainViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus){
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways, .authorizedWhenInUse:
+            print("Loaction manager: authorizedAlways || authorizedWhenInUse")
+            locationManager.requestLocation()
+        case .denied, .restricted:
+            print("Loaction manager: denied || restricted")
+            // If user denied permission to give location access
+            apiCallByCityName(city: "Kathmandu")
+        case .notDetermined:
+            print("Loaction manager: notDetermined")
+        @unknown default:
+            // raise an error - This case should never be called
+            print("Loaction manager: Default")
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             locationManager.stopUpdatingLocation()
@@ -109,7 +126,7 @@ extension MainViewController: UITableViewDataSource {
         cell.conditionImage.image = UIImage(systemName: weatherModel.conditionName)
         
         // convert miliseconds into date fromat
-
+        
         cell.dateLabel.text = WeatherDateFormatter().getFormattedDate(dateInSec: data.dt)
         cell.minTempLabel.text = String (format: "%.0f", data.temp.min)
         cell.maxTempLabel.text = String (format: "%.0f", data.temp.max)
